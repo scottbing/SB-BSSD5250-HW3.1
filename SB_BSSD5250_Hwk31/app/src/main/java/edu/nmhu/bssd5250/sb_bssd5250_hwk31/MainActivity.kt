@@ -4,33 +4,48 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 
 class MainActivity : AppCompatActivity() {
+
+    private var fid = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val fragmentContainerView = FragmentContainerView(this).apply {
+        val addButton = Button(this).apply {
+            text = "+"
             id = View.generateViewId()
-            setBackgroundColor(Color.BLUE)
-            layoutParams = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT)
+            setOnClickListener {
+                supportFragmentManager.commit {
+                    //setReorderingAllowed(true)
+                    add(fid, NoteFragment.newInstance(), null)
+                }
+            }
+        }
+
+        val fragmentLinearLayout = LinearLayoutCompat(this).apply {
+        id = View.generateViewId()
+        fid = id
+        orientation = LinearLayoutCompat.VERTICAL
+        setBackgroundColor(Color.BLUE)
+        layoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT)
+        (layoutParams as RelativeLayout.LayoutParams).addRule(
+            RelativeLayout.BELOW, addButton.id)
         }
 
         val relativeLayout = RelativeLayout(this).apply {
             setBackgroundColor(Color.GRAY)
-            addView(fragmentContainerView)
+            addView(addButton)
+            addView(fragmentLinearLayout)
         }
 
         setContentView(relativeLayout)
-
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            add(fragmentContainerView.id, NoteFragment.newInstance(), null)
-        }
     }
 }
