@@ -12,11 +12,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import org.w3c.dom.Text
+import com.google.android.material.internal.ViewUtils.dpToPx
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
 
 /**
  * A simple [Fragment] subclass.
@@ -36,6 +38,7 @@ class NoteFragment : Fragment() {
         }
     }
 
+    val buttonWidth:Int = 200
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,67 +46,45 @@ class NoteFragment : Fragment() {
         val nameView = TextView(context).apply {
             setText(R.string.name_place_holder)
         }
-        val nameButton = Button(context).apply {
-            setText(R.string.edit_place_holder)
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 100,180)
+        val editButton = Button(context).apply {
+            this.setText(R.string.edit_place_holder)
+            this.setWidth(buttonWidth)
+            this.gravity = Gravity.END
+            this.minimumWidth = 800
+            layoutParams = LinearLayout.LayoutParams(200, 100)
         }
         val dateView = TextView(context).apply {
             setText(R.string.date_place_holder)
         }
-        val dateButton = Button(context).apply {
-            setText(R.string.edit_place_holder)
-        }
         val descView = TextView(context).apply {
             setText(R.string.desc_place_holder)
         }
-        val descButton = Button(context).apply {
-            setText(R.string.edit_place_holder)
-        }
 
-        // set edit button to right-hand of screen
-        val editParams = LinearLayoutCompat.LayoutParams(
-            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+        val rightParams = LinearLayout.LayoutParams(
+            LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
             LinearLayoutCompat.LayoutParams.WRAP_CONTENT
         ).apply {
             weight = 1.0f
             gravity = Gravity.END
         }
+        rightParams.height = 100;
+        rightParams.width = 150;
+        //rightParams.gravity=Gravity.END
+        editButton.setLayoutParams(rightParams);
 
-        nameButton.setLayoutParams(editParams);
-        dateButton.setLayoutParams(editParams);
-        descButton.setLayoutParams(editParams);
-
-        val nameLinearLayout = LinearLayoutCompat(requireContext()).apply {
+        val innerLinearLayout = LinearLayoutCompat(requireContext()).apply {
             setBackgroundColor(Color.WHITE)
             orientation = LinearLayoutCompat.HORIZONTAL
-            layoutParams = LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT
+            val layoutParams = LinearLayoutCompat.LayoutParams(
+                LinearLayoutCompat.LayoutParams.WRAP_CONTENT,
+                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
             )
+            layoutParams.height = 100;
+            layoutParams.width = 150;
+            layoutParams.gravity=Gravity.END
+            editButton.setLayoutParams(layoutParams);
             addView(nameView)
-            addView(nameButton)
-        }
-
-        val dateLinearLayout = LinearLayoutCompat(requireContext()).apply {
-            setBackgroundColor(Color.WHITE)
-            orientation = LinearLayoutCompat.HORIZONTAL
-            layoutParams = LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-            )
-            addView(dateView)
-            addView(dateButton)
-        }
-
-        val descLinearLayout = LinearLayoutCompat(requireContext()).apply {
-            setBackgroundColor(Color.WHITE)
-            orientation = LinearLayoutCompat.HORIZONTAL
-            layoutParams = LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-            )
-            addView(descView)
-            addView(descButton)
+            addView(editButton)
         }
 
         val outerLinearLayout = LinearLayoutCompat(requireContext()).apply {
@@ -113,9 +94,9 @@ class NoteFragment : Fragment() {
                 LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                 LinearLayoutCompat.LayoutParams.WRAP_CONTENT
             )
-            addView(nameLinearLayout)
-            addView(dateLinearLayout)
-            addView(descLinearLayout)
+            addView(innerLinearLayout)
+            addView(dateView)
+            addView(descView)
         }
         // Inflate the layout for this fragment
         return outerLinearLayout
@@ -135,8 +116,6 @@ class NoteFragment : Fragment() {
         fun newInstance() =
             NoteFragment().apply {
                 arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
                 }
             }
     }
